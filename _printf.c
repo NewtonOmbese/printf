@@ -1,83 +1,47 @@
 #include "main.h"
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
-/**
- * printer - Uses the coresponding function to print.
- * @formati: Type of element to print.
- * Return: Function address.
- **/
-int (*printer(char formati))(va_list)
-{
-	type_printer frm[] = {
-	{'c', print_c},
-	{'s', print_s},
-	{'i', print_i},
-	{'d', print_i},
-	{'R', print_rot13},
-	{'b', print_b},
-	{'r', print_r},
-	{'S', print_S},
-	{'p', print_p},
-	{'u', print_u},
-	{'x', print_x},
-	{'X', print_X},
-	{'o', print_o},
-	{'\0', NULL}
-	};
-	int i = 0;
 
-	for (i = 0; frm[i].c; i++)
-	{
-		if (formati == frm[i].c)
-			break;
-	}
-	return (frm[i].f);
-}
 /**
- * _printf - a function that produces output according to a format
- * @format: character string
- * Return: 0 success
+ * _printf - produces output according to a format
+ * @format: format string containing the characters and the specifiers
+ * Description: this function will call the get_print() function that will
+ * determine which printing function to call depending on the conversion
+ * specifiers contained into fmt
+ * Return: length of the formatted output string
  */
 int _printf(const char *format, ...)
 {
-	va_list arg;
-	int i = 0, p_counter = 0;
-	int (*f)(va_list);
+	int (*pfunc)(va_list, flags_t *);
+	const char *p;
+	va_list arguments;
+	flags_t flags = {0, 0, 0};
 
-	if (!format || (format[0] == '%' && format[1] == '\0'))
+	register int count = 0;
+
+	va_start(arguments, format);
+	if (!format || (format[0] == '%' && !format[1]))
 		return (-1);
-	va_start(arg, format);
-	for (; format && format[i]; i++)
+	if (format[0] == '%' && format[1] == ' ' && !format[2])
+		return (-1);
+	for (p = format; *p; p++)
 	{
-		if (format[i] == '%')
+		if (*p == '%')
 		{
-			if (format[i + 1] == '%')
+			p++;
+			if (*p == '%')
 			{
-				_putchar(format[i]);
-			    i++;
-				p_counter++;
+				count += _putchar('%');
+				continue;
 			}
-			else if (format[i + 1] == '\0')
-			{
-				_putchar(format[i]);
-				p_counter++;
-				return (p_counter);
-			}
-			else
-			{
-				f = printer(format[i + 1]);
-				if (f != NULL)
-				{
-					p_counter += f(arg);
-					i++;
-				}
-				else
-				{
-					_putchar(format[i]);
-					p_counter++;	}	}	}
-		else
-		{	_putchar(format[i]);
-			p_counter++;	}	}
-	va_end(arg);
-	return (p_counter);	}
+			while (get_flag(*p, &flags))
+				p++;
+			pfunc = get_print(*p);
+			count += (pfunc)
+				? pfunc(arguments, &flags)
+				: _printf("%%%c", *p);
+		} else
+			count += _putchar(*p);
+	}
+	_putchar(-1);
+	va_end(arguments);
+	return (count);
+}
