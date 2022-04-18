@@ -39,11 +39,5 @@ int _printf(const char *format, ...)
 			} /* end of inner while */
 			if (!flag)
 				_putchar(format[i]), chars_printed++;
-		} /* end else if */
-		else
-			_putchar(format[i]), chars_printed++;
-		i++;
-	} /* end of outer while */
-	va_end(arg_ptr);
-	return (chars_printed);
+	
 }
