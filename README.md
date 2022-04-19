@@ -488,3 +488,6 @@ This project is licensed under the MIT License - see the [LICENSE](./LICENSE) fi
 The `_printf` function emulates functionality of the C standard library
 function `printf`. This README borrows from the Linux man page
 [printf(3)](https://linux.die.net/man/3/printf).
+
+##WELCOME AND ENJOY
+All who come across are most welcome to revisiting our code over and over 
