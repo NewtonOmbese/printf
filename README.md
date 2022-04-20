@@ -496,3 +496,5 @@ It was a too tough work but we managed to clear 193% of the task
 
 ALX got the best network for we developers from across Africa
 Forgot to play wiser
+
+I guess we are needed to revisit C wholly to understand it totally and be merchants of it
